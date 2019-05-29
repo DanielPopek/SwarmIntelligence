@@ -30,24 +30,6 @@ class ObjectiveFunction(object):
         pass
 
 
-class Sphere(ObjectiveFunction):
-
-    def __init__(self, dim):
-        super(Sphere, self).__init__('Sphere', dim, -100.0, 100.0)
-
-    def evaluate(self, x):
-        return sum(np.power(x, 2))
-
-
-class Rosenbrock(ObjectiveFunction):
-
-    def __init__(self, dim):
-        super(Rosenbrock, self).__init__('Rosenbrock', dim, -30.0, 30.0)
-
-    def evaluate(self, x):
-        return optimize.rosen(x)
-
-
 class Rastrigin(ObjectiveFunction):
 
     def __init__(self, dim):

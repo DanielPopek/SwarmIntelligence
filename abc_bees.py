@@ -17,7 +17,7 @@ class EmployedScoutBee(Bee):
     def explore_if_needed(self):
         self.timer = self.timer - 1
         if self.timer == 0:
-            # print(f'  SCOUT bee went exploring from position {self.pos}')
+            print(f'  SCOUT bee went exploring from position {self.pos}')
             self.pos = self.f.custom_sample()
             self.timer = self.limit
 
@@ -41,15 +41,16 @@ class OnlookerBee(Bee):
 
 
 class Hive(object):
-    LIMIT = 20
+    LIMIT = 15
     NEIGHBOURHOOD = 0.05
 
-    def __init__(self, n, benchmark):
+    def __init__(self, n_empl, n_onlook, benchmark):
         self.f = benchmark
-        self.bees_employed = [EmployedScoutBee(benchmark, self.LIMIT) for _ in range(int(n/2))]
-        self.bees_onlookers = [OnlookerBee(benchmark, self.NEIGHBOURHOOD) for _ in range(int(n/2))]
+        self.bees_employed = [EmployedScoutBee(benchmark, self.LIMIT) for _ in range(n_empl)]
+        self.bees_onlookers = [OnlookerBee(benchmark, self.NEIGHBOURHOOD) for _ in range(n_onlook)]
         self.best_bee_pos = self.bees_employed[0].pos  # initialization of best bee position - just random bee
-        self.n = n
+        self.n_empl = n_empl
+        self.n_onlook = n_onlook
 
     def update_best_bee_position(self, bees_evaluation_values):
         best_bee_index = np.argmin(bees_evaluation_values)
@@ -71,8 +72,8 @@ class Hive(object):
         self.update_fitness(self.bees_employed)
         fitness_values = np.array([bee.fitness for bee in self.bees_employed])
         probabilities = list(fitness_values / np.sum(fitness_values))
-        employees = np.random.choice(self.bees_employed, int(self.n/2), p=probabilities)
-        random_neighbours = np.random.choice(self.bees_employed, int(self.n/2))
+        employees = np.random.choice(self.bees_employed, self.n_onlook, p=probabilities)
+        random_neighbours = np.random.choice(self.bees_employed, self.n_onlook)
         return employees, random_neighbours
 
     def update_onlookers_pos(self):

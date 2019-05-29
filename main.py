@@ -14,31 +14,26 @@ def update_bees_positions(x, y, bees, position=False):
     return x, y
 
 
-def save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, no_of_bees, iterations):
-    file_name = f"positions_of_{no_of_bees}_bees_in_{iterations}_iterations.txt"
+def save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, hive, iterations):
+    file_name = f"./tests/abc/{hive.f.name}_{hive.n_empl}-{hive.n_onlook}_bees_in_" \
+        f"{iterations}iterations_{hive.LIMIT}limit_{hive.NEIGHBOURHOOD}neighbourhood.txt"
     with open(file_name, "wb") as fp:
         pickle.dump([x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook], fp)
 
 
-def load_bees_positions(no_of_bees, iterations):
-    file_name = f"positions_of_{no_of_bees}_bees_in_{iterations}_iterations.txt"
-    with open(file_name, "rb") as fp:
-        x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook = pickle.load(fp)
-    return x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook
-
-
 if __name__ == '__main__':
     dimensions = 2
-    benchmark_function = Rastrigin(dimensions)
-    no_of_bees = 20
-    hive = Hive(no_of_bees, benchmark_function)
+    benchmark_function = Schwefel(dimensions)
+    employed_no, onlooker_no = 10, 30
+    hive = Hive(employed_no, onlooker_no, benchmark_function)
 
     x_best_bee, y_best_bee = [[]], [[]]
-    x_empl, y_empl = [[] for _ in range(int(no_of_bees/2))], [[] for _ in range(int(no_of_bees/2))]
-    x_onlook, y_onlook = [[] for _ in range(int(no_of_bees/2))], [[] for _ in range(int(no_of_bees/2))]
+    x_empl, y_empl = [[] for _ in range(employed_no)], [[] for _ in range(employed_no)]
+    x_onlook, y_onlook = [[] for _ in range(onlooker_no)], [[] for _ in range(onlooker_no)]
 
     iterations = 100
     for i in range(iterations):
+        print('Iteration', i)
         hive.roulette()  # get places to which onlookers should fly
         hive.update_onlookers_pos()
         hive.send_scouts_for_exploration_if_needed()
@@ -49,4 +44,5 @@ if __name__ == '__main__':
             x_onlook, y_onlook = update_bees_positions(x_onlook, y_onlook, hive.bees_onlookers)
 
     print('\nBest bee in the whole population:', hive.best_bee_pos)
-    save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, no_of_bees, iterations)
+
+    save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, hive, iterations)

@@ -17,7 +17,7 @@ class EmployedScoutBee(Bee):
     def explore_if_needed(self):
         self.timer = self.timer - 1
         if self.timer == 0:
-            print(f'  SCOUT bee went exploring from position {self.pos}')
+            # print(f'  SCOUT bee went exploring from position {self.pos}')
             self.pos = self.f.custom_sample()
             self.timer = self.limit
 
@@ -31,19 +31,18 @@ class OnlookerBee(Bee):
     def fly_to_food(self, employee, random_neighbour):
         self.pos = employee.pos + self.neighbourhood * (random_neighbour.pos - employee.pos)
         self.employee = employee
-        print(f'  ONLOOKER bee is on position {self.pos} next to EMPLOYEE on {employee.pos}')
 
     def swap_with_parent_if_needed(self):
         if self.fitness > self.employee.fitness:
-            print(f'  swap onlooker with its employee')
+            # print(f'  SWAP onlooker with its employee')
             self.pos, self.employee.pos = self.employee.pos, self.pos
             self.fitness, self.employee.fitness = self.employee.fitness, self.fitness
             self.employee.timer = self.employee.limit
 
 
 class Hive(object):
-    LIMIT = 10
-    NEIGHBOURHOOD = 0.1
+    LIMIT = 20
+    NEIGHBOURHOOD = 0.05
 
     def __init__(self, n, benchmark):
         self.f = benchmark
@@ -78,7 +77,6 @@ class Hive(object):
 
     def update_onlookers_pos(self):
         employees, random_neighbours = self.roulette()
-        print(f'Selected employees and their random neighbours')
         for i, onlooker in enumerate(self.bees_onlookers):
             onlooker.fly_to_food(employees[i], random_neighbours[i])
 

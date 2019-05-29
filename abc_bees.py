@@ -17,6 +17,7 @@ class EmployedScoutBee(Bee):
     def explore_if_needed(self):
         self.timer = self.timer - 1
         if self.timer == 0:
+            print(f'  SCOUT bee went exploring from position {self.pos}')
             self.pos = self.f.custom_sample()
             self.timer = self.limit
 
@@ -30,11 +31,14 @@ class OnlookerBee(Bee):
     def fly_to_food(self, employee, random_neighbour):
         self.pos = employee.pos + self.neighbourhood * (random_neighbour.pos - employee.pos)
         self.employee = employee
+        print(f'  ONLOOKER bee is on position {self.pos} next to EMPLOYEE on {employee.pos}')
 
     def swap_with_parent_if_needed(self):
         if self.fitness > self.employee.fitness:
+            print(f'  swap onlooker with its employee')
             self.pos, self.employee.pos = self.employee.pos, self.pos
             self.fitness, self.employee.fitness = self.employee.fitness, self.fitness
+            self.employee.timer = self.employee.limit
 
 
 class Hive(object):
@@ -43,34 +47,46 @@ class Hive(object):
 
     def __init__(self, n, benchmark):
         self.f = benchmark
-        self.best_bee_pos = [0, 0]
-        self.bees_employed = []
-        self.bees_onlookers = []
+        self.bees_employed = [EmployedScoutBee(benchmark, self.LIMIT) for _ in range(int(n/2))]
+        self.bees_onlookers = [OnlookerBee(benchmark, self.NEIGHBOURHOOD) for _ in range(int(n/2))]
+        self.best_bee_pos = self.bees_employed[0].pos  # initialization of best bee position - just random bee
         self.n = n
 
-    def update_fitness(self):
-        bees = self.bees_employed + self.bees_onlookers
-        bees_evaluation_values = [self.f(bee.pos) for bee in bees]
-        f_min, f_max = min(bees_evaluation_values), max(bees_evaluation_values)
+    def update_best_bee_position(self, bees_evaluation_values):
+        best_bee_index = np.argmin(bees_evaluation_values)
+        all_bees_positions = [bee.pos for bee in self.bees_employed] + [bee.pos for bee in self.bees_onlookers]
+        if self.f.evaluate(all_bees_positions[best_bee_index]) < self.f.evaluate(self.best_bee_pos):  # minimum
+            self.best_bee_pos = all_bees_positions[best_bee_index]
+
+    def update_fitness(self, bees):
+        all_bees_evaluation_values = [self.f.evaluate(bee.pos) for bee in self.bees_employed] + \
+                                     [self.f.evaluate(bee.pos) for bee in self.bees_onlookers]
+        f_min, f_max = min(all_bees_evaluation_values), max(all_bees_evaluation_values)
+        self.update_best_bee_position(all_bees_evaluation_values)
+
+        bees_evaluation_values = [self.f.evaluate(bee.pos) for bee in bees]
         for i, bee in enumerate(bees):
             bee.fitness = 1 - (bees_evaluation_values[i] - f_min) / (f_max - f_min)
 
     def roulette(self):
-        self.update_fitness()
+        self.update_fitness(self.bees_employed)
         fitness_values = np.array([bee.fitness for bee in self.bees_employed])
         probabilities = list(fitness_values / np.sum(fitness_values))
-        employees = np.random.choice(self.bees_employed, self.n/2, p=probabilities)
-        random_neighbours = np.random.choice(self.bees_employed, self.n/2)
-
+        employees = np.random.choice(self.bees_employed, int(self.n/2), p=probabilities)
+        random_neighbours = np.random.choice(self.bees_employed, int(self.n/2))
         return employees, random_neighbours
 
     def update_onlookers_pos(self):
         employees, random_neighbours = self.roulette()
-        for i, onlooker in self.bees_onlookers:
+        print(f'Selected employees and their random neighbours')
+        for i, onlooker in enumerate(self.bees_onlookers):
             onlooker.fly_to_food(employees[i], random_neighbours[i])
+
+        self.update_fitness(self.bees_onlookers)
+        for i, onlooker in enumerate(self.bees_onlookers):
             onlooker.swap_with_parent_if_needed()
 
-    def send_scouts_for_exploration(self):
+    def send_scouts_for_exploration_if_needed(self):
         for potential_scout in self.bees_employed:
             potential_scout.explore_if_needed()
-        self.update_fitness()
+        self.update_fitness(self.bees_employed)

@@ -212,11 +212,11 @@ def animation_of_bees(fig, ax, file_name, save_gif=False):
 
 
 if __name__ == '__main__':
-    # file_name = 'Ackley_10-30_bees_in_100iterations_15limit_0.05neighbourhood.txt'
-    # animation_ackley_for_bees(file_name)
+    file_name = 'Ackley_10-20_bees_in_100iterations_40limit_0.5neighbourhood.txt'
+    animation_ackley_for_bees(file_name)
 
-    # file_name = 'Rastrigin_10-30_bees_in_100iterations_15limit_0.05neighbourhood.txt'
+    # file_name = 'Rastrigin_25-25_bees_in_1000iterations_50limit_0.4neighbourhood.txt'
     # animation_rastrigin_for_bees(file_name)
 
-    file_name = 'Schwefel_10-30_bees_in_100iterations_15limit_0.05neighbourhood.txt'
-    animation_schwefel_for_bees(file_name)
+    # file_name = 'Schwefel_30-70_bees_in_500iterations_15limit_0.05neighbourhood.txt'
+    # animation_schwefel_for_bees(file_name)

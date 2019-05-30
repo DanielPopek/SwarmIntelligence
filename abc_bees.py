@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 class Bee(object):
@@ -17,7 +18,7 @@ class EmployedScoutBee(Bee):
     def explore_if_needed(self):
         self.timer = self.timer - 1
         if self.timer == 0:
-            print(f'  SCOUT bee went exploring from position {self.pos}')
+            # print(f'  SCOUT bee went exploring from position {self.pos}')
             self.pos = self.f.custom_sample()
             self.timer = self.limit
 
@@ -27,9 +28,36 @@ class OnlookerBee(Bee):
         super(OnlookerBee, self).__init__(benchmark)
         self.employee = EmployedScoutBee
         self.neighbourhood = neighbourhood
+        self.dim = self.f.dim
 
-    def fly_to_food(self, employee, random_neighbour):
+    def fly_to_food_simply(self, employee, random_neighbour):
         self.pos = employee.pos + self.neighbourhood * (random_neighbour.pos - employee.pos)
+        self.employee = employee
+
+    def fly_to_food_randomly_by_neighbour(self, employee, random_neighbour):
+        phi = np.random.uniform(low=-self.neighbourhood, high=self.neighbourhood, size=self.dim)
+        self.pos = employee.pos + phi * (random_neighbour.pos - employee.pos)
+        self.employee = employee
+
+    def fly_to_food_uniformly_by_neighbour(self, employee, random_neighbour):
+        phi = np.random.uniform(low=-self.neighbourhood, high=self.neighbourhood, size=self.dim)
+        dist = np.linalg.norm(random_neighbour.pos - employee.pos)
+        self.pos = employee.pos + phi * dist
+        self.employee = employee
+
+    def fly_to_food_uniformly_by_neighbourhood(self, employee, random_neighbour):  # not working good
+        phi = np.random.uniform(low=-self.neighbourhood, high=self.neighbourhood, size=self.dim)
+        self.pos = employee.pos + phi
+        self.employee = employee
+
+    def fly_to_food_choosing_random_dimensions(self, employee, random_neighbour):
+        no_of_dimensions = random.randint(1, self.dim)
+        dimensions_to_change = np.random.choice(list(range(0, self.dim)), no_of_dimensions)
+        for d in range(self.dim):
+            self.pos[d] = employee.pos[d]
+            if d in dimensions_to_change:
+                self.pos[d] += self.neighbourhood * (random_neighbour.pos[d] - employee.pos[d]) \
+                               * (1 if random.randint(0, 1) == 0 else -1)
         self.employee = employee
 
     def swap_with_parent_if_needed(self):
@@ -41,8 +69,8 @@ class OnlookerBee(Bee):
 
 
 class Hive(object):
-    LIMIT = 15
-    NEIGHBOURHOOD = 0.05
+    LIMIT = 40
+    NEIGHBOURHOOD = 0.5
 
     def __init__(self, n_empl, n_onlook, benchmark):
         self.f = benchmark
@@ -52,17 +80,16 @@ class Hive(object):
         self.n_empl = n_empl
         self.n_onlook = n_onlook
 
-    def update_best_bee_position(self, bees_evaluation_values):
+    def update_best_bee_position(self, bees_evaluation_values, all_bees_positions):
         best_bee_index = np.argmin(bees_evaluation_values)
-        all_bees_positions = [bee.pos for bee in self.bees_employed] + [bee.pos for bee in self.bees_onlookers]
         if self.f.evaluate(all_bees_positions[best_bee_index]) < self.f.evaluate(self.best_bee_pos):  # minimum
             self.best_bee_pos = all_bees_positions[best_bee_index]
 
     def update_fitness(self, bees):
-        all_bees_evaluation_values = [self.f.evaluate(bee.pos) for bee in self.bees_employed] + \
-                                     [self.f.evaluate(bee.pos) for bee in self.bees_onlookers]
+        all_bees_positions = [bee.pos for bee in self.bees_employed] + [bee.pos for bee in self.bees_onlookers]
+        all_bees_evaluation_values = [self.f.evaluate(bee) for bee in all_bees_positions]
         f_min, f_max = min(all_bees_evaluation_values), max(all_bees_evaluation_values)
-        self.update_best_bee_position(all_bees_evaluation_values)
+        self.update_best_bee_position(all_bees_evaluation_values, all_bees_positions)
 
         bees_evaluation_values = [self.f.evaluate(bee.pos) for bee in bees]
         for i, bee in enumerate(bees):
@@ -79,7 +106,7 @@ class Hive(object):
     def update_onlookers_pos(self):
         employees, random_neighbours = self.roulette()
         for i, onlooker in enumerate(self.bees_onlookers):
-            onlooker.fly_to_food(employees[i], random_neighbours[i])
+            onlooker.fly_to_food_randomly_by_neighbour(employees[i], random_neighbours[i])
 
         self.update_fitness(self.bees_onlookers)
         for i, onlooker in enumerate(self.bees_onlookers):

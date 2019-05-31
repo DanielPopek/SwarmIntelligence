@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import math
 
 
 class Bee(object):
@@ -69,8 +70,8 @@ class OnlookerBee(Bee):
 
 
 class Hive(object):
-    LIMIT = 40
-    NEIGHBOURHOOD = 0.5
+    LIMIT = 20
+    NEIGHBOURHOOD = 50
 
     def __init__(self, n_empl, n_onlook, benchmark):
         self.f = benchmark
@@ -82,16 +83,16 @@ class Hive(object):
 
     def update_best_bee_position(self, bees_evaluation_values, all_bees_positions):
         best_bee_index = np.argmin(bees_evaluation_values)
-        if self.f.evaluate(all_bees_positions[best_bee_index]) < self.f.evaluate(self.best_bee_pos):  # minimum
+        if abs(self.f.evaluate(all_bees_positions[best_bee_index])) < self.f.evaluate(self.best_bee_pos):  # minimum
             self.best_bee_pos = all_bees_positions[best_bee_index]
 
     def update_fitness(self, bees):
         all_bees_positions = [bee.pos for bee in self.bees_employed] + [bee.pos for bee in self.bees_onlookers]
-        all_bees_evaluation_values = [self.f.evaluate(bee) for bee in all_bees_positions]
+        all_bees_evaluation_values = [abs(self.f.evaluate(bee)) for bee in all_bees_positions]
         f_min, f_max = min(all_bees_evaluation_values), max(all_bees_evaluation_values)
         self.update_best_bee_position(all_bees_evaluation_values, all_bees_positions)
 
-        bees_evaluation_values = [self.f.evaluate(bee.pos) for bee in bees]
+        bees_evaluation_values = [abs(self.f.evaluate(bee.pos)) for bee in bees]
         for i, bee in enumerate(bees):
             bee.fitness = 1 - (bees_evaluation_values[i] - f_min) / (f_max - f_min)
 
@@ -106,7 +107,7 @@ class Hive(object):
     def update_onlookers_pos(self):
         employees, random_neighbours = self.roulette()
         for i, onlooker in enumerate(self.bees_onlookers):
-            onlooker.fly_to_food_randomly_by_neighbour(employees[i], random_neighbours[i])
+            onlooker.fly_to_food_uniformly_by_neighbourhood(employees[i], random_neighbours[i])
 
         self.update_fitness(self.bees_onlookers)
         for i, onlooker in enumerate(self.bees_onlookers):

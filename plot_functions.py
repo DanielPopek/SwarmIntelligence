@@ -168,12 +168,13 @@ def animation_schwefel_for_bees(file_name):
     plt.show()
 
 
-def animation_of_bees(fig, ax, file_name, save_gif=False):
-    def load_bees_positions(file_name):
-        with open("./tests/abc/" + file_name, "rb") as fp:
-            x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook = pickle.load(fp)
-        return x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook
+def load_bees_positions(file_name):
+    with open("./tests/abc/" + file_name, "rb") as fp:
+        x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook = pickle.load(fp)
+    return x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook
 
+
+def animation_of_bees(fig, ax, file_name, save_gif=False):
     x_b, y_b, x_e, y_e, x_o, y_o = load_bees_positions(file_name)
 
     plot_colors, markers = ["orangered", "black", "#064413"], ["D", "X", "."]
@@ -211,8 +212,43 @@ def animation_of_bees(fig, ax, file_name, save_gif=False):
     return anim
 
 
+def best_and_avg_evaluation_plot(file_name, f):
+    x_b, y_b, x_e, y_e, x_o, y_o = load_bees_positions(file_name)
+    best_pos = x_b + y_b
+    iterations = len(x_b[0])
+
+    best_value = [f.evaluate(np.array([best_pos[0][i], best_pos[1][i]])) for i in range(iterations)]
+    bees_eval = []
+    for i in range(iterations):
+        bees_eval.append([f.evaluate(np.array([x_e[j][i], y_e[j][i]])) for j in range(len(x_e))] +
+                              [f.evaluate(np.array([x_o[j][i], y_o[j][i]])) for j in range(len(x_o))])
+
+    best_bee = [min(values) for values in bees_eval]
+    avg_bee = [sum(values)/len(values) for values in bees_eval]
+    x = list(range(iterations))
+
+    plt.plot(x, [0 for _ in x], color="grey", ls='--')
+    plt.plot(x, best_bee, color='lightseagreen', label='best bee')
+    plt.plot(x, best_value, color='forestgreen', label='best found')
+    plt.plot(x, avg_bee, color='coral', label='average bee')
+    plt.xlim(0, iterations-1)
+    plt.legend()
+    plt.ylabel('function value')
+    plt.xlabel('iteration')
+
+    best = best_value[-1]
+    best_str = ('%0.8f' if best < 0.0001 else ('%0.5f' if best < 1 else ('%0.3f' if best < 10 else '%0.2f'))) % best
+    plt.title(f'{f.name} function for ABC having {len(bees_eval[0])} bees in {f.dim} dimensions\n'
+              f'with final best value = {best_str}')
+
+    plt.show()
+
+
 if __name__ == '__main__':
+    benchmark = Ackley(2)
     file_name = 'Ackley_10-20_bees_in_100iterations_40limit_0.5neighbourhood.txt'
+
+    best_and_avg_evaluation_plot(file_name, benchmark)
     animation_ackley_for_bees(file_name)
 
     # file_name = 'Rastrigin_25-25_bees_in_1000iterations_50limit_0.4neighbourhood.txt'

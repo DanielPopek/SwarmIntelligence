@@ -38,15 +38,6 @@ class SampleFunction(ObjectiveFunction):
     def evaluate(self, x):
         return math.pow(x[0, 0], 2) + math.pow(x[0, 1], 2) + 1
 
-class SampleFunction2(ObjectiveFunction):
-
-    def __init__(self, dim):
-        super(SampleFunction2, self).__init__('Sample', dim, -1, 1)
-
-    def evaluate(self, x):
-        return math.pow(x[0,0], 2) + math.pow(x[0,1], 2) + 1
-
-
 class Rastrigin(ObjectiveFunction):
 
     def __init__(self, dim):
@@ -75,7 +66,7 @@ class Ackley(ObjectiveFunction):
     def evaluate(self, x):
         first_sum = 0.0
         second_sum = 0.0
-        if(x.shape==(1, 2)):
+        if(x.shape[0]==1):
             x=x[0]
         for c in x:
             first_sum += c ** 2.0

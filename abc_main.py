@@ -25,8 +25,8 @@ def save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlo
 
 
 def get_evaluation_values(hive):
-    return [hive.f.evaluate(bee.pos) for bee in hive.bees_employed] + \
-           [hive.f.evaluate(bee.pos) for bee in hive.bees_onlookers]
+    return [abs(hive.f.evaluate(bee.pos)) for bee in hive.bees_employed] + \
+           [abs(hive.f.evaluate(bee.pos)) for bee in hive.bees_onlookers]
 
 
 def best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, f):
@@ -53,8 +53,8 @@ def best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, f):
 
 if __name__ == '__main__':
     dimensions = 2
-    benchmark_function = Ackley(dimensions)
-    employed_no, onlooker_no = 10, 20
+    benchmark_function = Schwefel(dimensions)
+    employed_no, onlooker_no = 20, 50
     hive = Hive(employed_no, onlooker_no, benchmark_function)
 
     x_best_bee, y_best_bee = [[]], [[]]
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     evaluation_values, best_value = [], []
 
-    iterations = 100
+    iterations = 200
     for i in range(iterations):
         if (i+1) % 25 == 0:
             print('Iteration', i+1)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         hive.send_scouts_for_exploration_if_needed()
 
         evaluation_values.append(get_evaluation_values(hive))
-        best_value.append(benchmark_function.evaluate(hive.best_bee_pos))
+        best_value.append(abs(benchmark_function.evaluate(hive.best_bee_pos)))
 
         if dimensions == 2:
             x_best_bee, y_best_bee = update_bees_positions(x_best_bee, y_best_bee, [hive.best_bee_pos], position=True)
@@ -80,7 +80,7 @@ if __name__ == '__main__':
             x_onlook, y_onlook = update_bees_positions(x_onlook, y_onlook, hive.bees_onlookers)
 
     print('\nBest bee in the whole population:', hive.best_bee_pos)
-    print('\nEvaluation:', benchmark_function.evaluate(hive.best_bee_pos))
+    print('Evaluation:', abs(benchmark_function.evaluate(hive.best_bee_pos)))
 
     best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, benchmark_function)
 

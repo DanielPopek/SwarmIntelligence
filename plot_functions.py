@@ -54,7 +54,7 @@ def plot_rastrigin_2D3D():
     plt.show()
 
 
-def animation_ackley_for_bees(file_name):
+def animation_ackley(file_name, anim_f):
     fig = plt.figure(figsize=(12, 6))
     ax = fig.add_subplot(1, 2, 1, projection='3d')
 
@@ -79,13 +79,13 @@ def animation_ackley_for_bees(file_name):
     ax.add_artist(circle_small)
     ax.add_artist(circle_big)
 
-    anim = animation_of_bees(fig, ax, file_name)
+    anim = anim_f(fig, ax, file_name)
 
     plt.tight_layout()
     plt.show()
 
 
-def animation_rastrigin_for_bees(file_name):
+def animation_rastrigin(file_name, anim_f):
     fig = plt.figure(figsize=(12, 6))
     ax = fig.add_subplot(1, 2, 1, projection='3d')
 
@@ -120,14 +120,14 @@ def animation_rastrigin_for_bees(file_name):
     ax.add_artist(circle_small)
     ax.add_artist(circle_big)
 
-    anim = animation_of_bees(fig, ax, file_name)
+    anim = anim_f(fig, ax, file_name)
 
     plt.tight_layout()
     plt.draw()
     plt.show()
 
 
-def animation_schwefel_for_bees(file_name):
+def animation_schwefel(file_name, anim_f):
     fig = plt.figure(figsize=(12, 6))
     ax = fig.add_subplot(1, 2, 1, projection='3d')
 
@@ -161,7 +161,7 @@ def animation_schwefel_for_bees(file_name):
     ax.add_artist(circle_small)
     ax.add_artist(circle_big)
 
-    anim = animation_of_bees(fig, ax, file_name)
+    anim = anim_f(fig, ax, file_name)
 
     plt.tight_layout()
     plt.draw()
@@ -212,7 +212,48 @@ def animation_of_bees(fig, ax, file_name, save_gif=False):
     return anim
 
 
-def best_and_avg_evaluation_plot(file_name, f):
+def load_particles_positions(file_name):
+    with open("./tests/pso/" + file_name, "rb") as fp:
+        x_best, y_best, x_swarm, y_swarm = pickle.load(fp)
+    return x_best, y_best, x_swarm, y_swarm
+
+
+def animation_of_particles(fig, ax, file_name, save_gif=False):
+    x_b, y_b, x_p, y_p = load_particles_positions(file_name)
+
+    plot_colors, markers = ["orangered", "black"], ["D", "."]
+    lines = []
+    lines_data_x, lines_data_y = x_b + x_p, y_b + y_p
+
+    line = ax.plot([], [], marker=markers[0], color=plot_colors[0])[0]  # for best particle
+    lines.append(line)
+    for bee in range(len(x_p)):
+        line = ax.plot([], [], marker=markers[1], color=plot_colors[1])[0]  # for all particles
+        lines.append(line)
+
+    def init():
+        for line in lines:
+            line.set_data([], [])
+        return lines
+
+    def animate(i):
+        for l, line in enumerate(lines):
+            line.set_data(lines_data_x[l][i], lines_data_y[l][i])  # get bee, get current point
+        return lines
+
+    frames = len(lines_data_x[0])
+    interval = int(8000/frames)
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=frames, interval=interval,
+                                   blit=True, repeat=False)
+
+    if save_gif:
+        plt.tight_layout()
+        anim.save('./tests/pso/' + file_name[:-4] + '.gif', writer='imagemagick', fps=60)
+
+    return anim
+
+
+def best_and_avg_bees_evaluation_plot(file_name, f):
     x_b, y_b, x_e, y_e, x_o, y_o = load_bees_positions(file_name)
     best_pos = x_b + y_b
     iterations = len(x_b[0])
@@ -245,14 +286,15 @@ def best_and_avg_evaluation_plot(file_name, f):
 
 
 if __name__ == '__main__':
-    benchmark = Ackley(2)
-    file_name = 'Ackley_10-20_bees_in_100iterations_40limit_0.5neighbourhood.txt'
+    anim_fun = [animation_of_bees, animation_of_particles]
 
-    best_and_avg_evaluation_plot(file_name, benchmark)
-    animation_ackley_for_bees(file_name)
+    # benchmark = Ackley(2)
+    file_name = 'Ackley_40_particles_in_100iterations.txt'
+    animation_ackley(file_name, anim_fun[1])
+    # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
-    # file_name = 'Rastrigin_25-25_bees_in_1000iterations_50limit_0.4neighbourhood.txt'
-    # animation_rastrigin_for_bees(file_name)
+    # file_name = 'Rastrigin_40_particles_in_200iterations.txt'
+    # animation_rastrigin(file_name, anim_fun[1])
 
-    # file_name = 'Schwefel_30-70_bees_in_500iterations_15limit_0.05neighbourhood.txt'
-    # animation_schwefel_for_bees(file_name)
+    # file_name = 'Schwefel_20-50_bees_in_200iterations_20limit_50neighbourhood.txt'
+    # animation_schwefel(file_name, anim_fun[0])

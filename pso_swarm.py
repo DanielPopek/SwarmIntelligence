@@ -1,10 +1,12 @@
-import numpy as np
-import particle
+import pso_particle
+
 class Swarm(object):
 
     #data - paczka informacji wstepnych : N (rozmiar przezstrzeni, minimum dziedziny benchmarku, maksiumum
     def __init__(self,data):
-        particles_count,N,benchmark_min,benchmark_max,cost_function=data
+        # particles_count,N,benchmark_min,benchmark_max,cost_function=data
+        particles_count, function = data
+        N, benchmark_min, benchmark_max,cost_function=function.dim,function.minf,function.maxf,function.evaluate
         self.particles_count=particles_count
         self.cost_fuction = cost_function
         self.particles=self.initialize_particles(particles_count,N,benchmark_min,benchmark_max,cost_function)
@@ -15,7 +17,7 @@ class Swarm(object):
         particles=[]
         for i in range(particles_count):
             data=i,N,benchmark_min,benchmark_max,cost_function,self
-            new_particle=particle.Particle(data)
+            new_particle= pso_particle.Particle(data)
             particles.append(new_particle)
         return particles
 

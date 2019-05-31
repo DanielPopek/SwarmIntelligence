@@ -1,20 +1,20 @@
-import numpy as np
-import swarm
-import benchmark_functions
+import pso_swarm
+import benchmarks
 
 W = 0.729
 CP = 1.49445
 CG = 1.49445
-FUNCTION, DIMENTIONS, BENCHMARK_MIN, BENCHMARK_MAX = benchmark_functions.sample_function()
+
+FUNCTION=benchmarks.SampleFunction(2)
 ITERATIONS_COUNT = 150
-PARTICLES_COUNT = 20
+PARTICLES_COUNT = 40
 
 class PSO(object):
 
     #data - paczka informacji wstepnych : N (rozmiar przestrzeni, minimum dziedziny benchmarku, maksiumum
     def __init__(self):
-        data=PARTICLES_COUNT,DIMENTIONS,BENCHMARK_MIN,BENCHMARK_MAX,FUNCTION
-        self.swarm=swarm.Swarm(data)
+        data=PARTICLES_COUNT,FUNCTION
+        self.swarm= pso_swarm.Swarm(data)
         self.w=W
 
     # po to by sprawdzić jak zmniejszanie W wpływa na zbieganie do optimum globalnego (redukowanie eksploracji)

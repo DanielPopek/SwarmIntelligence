@@ -1,7 +1,8 @@
 import numpy as np
+import math
 
 from scipy import optimize
-from deap.benchmarks import schwefel
+# from deap.benchmarks import schwefel
 
 from abc import ABCMeta
 from abc import abstractmethod
@@ -29,6 +30,14 @@ class ObjectiveFunction(object):
     def evaluate(self, x):
         pass
 
+class SampleFunction(ObjectiveFunction):
+
+    def __init__(self, dim):
+        super(SampleFunction, self).__init__('Sample', dim, -1, 1)
+
+    def evaluate(self, x):
+        return math.pow(x[0, 0], 2) + math.pow(x[0, 1], 2) + 1
+
 
 class Rastrigin(ObjectiveFunction):
 
@@ -46,7 +55,8 @@ class Schwefel(ObjectiveFunction):
         super(Schwefel, self).__init__('Schwefel', dim, -500.0, 500.0)
 
     def evaluate(self, x):
-        return schwefel(x)[0]
+        # return schwefel(x)[0]
+        return 0
 
 
 class Ackley(ObjectiveFunction):
@@ -57,8 +67,18 @@ class Ackley(ObjectiveFunction):
     def evaluate(self, x):
         first_sum = 0.0
         second_sum = 0.0
+        if(x.shape==(1, 2)):
+            x=x[0]
         for c in x:
             first_sum += c ** 2.0
             second_sum += np.math.cos(2.0 * np.math.pi * c)
         n = float(len(x))
         return -20.0 * np.math.exp(-0.2 * np.math.sqrt(first_sum / n)) - np.math.exp(second_sum / n) + 20 + np.math.e
+
+
+# position=np.zeros(shape=[1,2])
+#
+# sample=SampleFunction(2)
+#
+# print(sample.evaluate(position))
+

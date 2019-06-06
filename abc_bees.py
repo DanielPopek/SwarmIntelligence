@@ -25,11 +25,12 @@ class EmployedScoutBee(Bee):
 
 
 class OnlookerBee(Bee):
-    def __init__(self, benchmark, neighbourhood=0.1):
+    def __init__(self, benchmark, fly_to_food_fun, neighbourhood=0.1):
         super(OnlookerBee, self).__init__(benchmark)
         self.employee = EmployedScoutBee
         self.neighbourhood = neighbourhood
         self.dim = self.f.dim
+        self.fly_to_food_fun = fly_to_food_fun
 
     def fly_to_food_simply(self, employee, random_neighbour):
         self.pos = employee.pos + self.neighbourhood * (random_neighbour.pos - employee.pos)
@@ -70,16 +71,19 @@ class OnlookerBee(Bee):
 
 
 class Hive(object):
-    LIMIT = 20
-    NEIGHBOURHOOD = 50
+    LIMIT = 10
+    NEIGHBOURHOOD = 0.1
 
-    def __init__(self, n_empl, n_onlook, benchmark):
+    def __init__(self, n_empl, n_onlook, benchmark, fly_to_food_fun, limit, neighbourhood):
         self.f = benchmark
+        self.LIMIT = limit
+        self.NEIGHBOURHOOD = neighbourhood
         self.bees_employed = [EmployedScoutBee(benchmark, self.LIMIT) for _ in range(n_empl)]
-        self.bees_onlookers = [OnlookerBee(benchmark, self.NEIGHBOURHOOD) for _ in range(n_onlook)]
+        self.bees_onlookers = [OnlookerBee(benchmark, fly_to_food_fun, self.NEIGHBOURHOOD) for _ in range(n_onlook)]
         self.best_bee_pos = self.bees_employed[0].pos  # initialization of best bee position - just random bee
         self.n_empl = n_empl
         self.n_onlook = n_onlook
+        self.fly_to_food_fun = fly_to_food_fun
 
     def update_best_bee_position(self, bees_evaluation_values, all_bees_positions):
         best_bee_index = np.argmin(bees_evaluation_values)
@@ -107,7 +111,7 @@ class Hive(object):
     def update_onlookers_pos(self):
         employees, random_neighbours = self.roulette()
         for i, onlooker in enumerate(self.bees_onlookers):
-            onlooker.fly_to_food_uniformly_by_neighbourhood(employees[i], random_neighbours[i])
+            onlooker.fly_to_food_fun(onlooker, employees[i], random_neighbours[i])
 
         self.update_fitness(self.bees_onlookers)
         for i, onlooker in enumerate(self.bees_onlookers):

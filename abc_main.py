@@ -18,7 +18,7 @@ def update_bees_positions(x, y, bees, position=False):
 
 
 def save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, hive, iterations):
-    file_name = f"./tests/abc/{hive.f.name}_{hive.n_empl}-{hive.n_onlook}_bees_in_" \
+    file_name = f"./tests/abc/positions/{hive.f.name}_{hive.n_empl}-{hive.n_onlook}_bees_in_" \
         f"{iterations}iterations_{hive.LIMIT}limit_{hive.NEIGHBOURHOOD}neighbourhood.txt"
     with open(file_name, "wb") as fp:
         pickle.dump([x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook], fp)
@@ -51,38 +51,50 @@ def best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, f):
     plt.show()
 
 
-if __name__ == '__main__':
-    dimensions = 2
-    benchmark_function = Schwefel(dimensions)
-    employed_no, onlooker_no = 20, 50
-    hive = Hive(employed_no, onlooker_no, benchmark_function)
-
+def run_abc(hive, iterations, save_tests=False, verbose=False):
     x_best_bee, y_best_bee = [[]], [[]]
-    x_empl, y_empl = [[] for _ in range(employed_no)], [[] for _ in range(employed_no)]
-    x_onlook, y_onlook = [[] for _ in range(onlooker_no)], [[] for _ in range(onlooker_no)]
+    x_empl, y_empl = [[] for _ in range(hive.n_empl)], [[] for _ in range(hive.n_empl)]
+    x_onlook, y_onlook = [[] for _ in range(hive.n_onlook)], [[] for _ in range(hive.n_onlook)]
 
     evaluation_values, best_value = [], []
 
-    iterations = 200
     for i in range(iterations):
-        if (i+1) % 25 == 0:
+        if verbose and (i+1) % 25 == 0:
             print('Iteration', i+1)
         hive.roulette()  # get places to which onlookers should fly
         hive.update_onlookers_pos()
         hive.send_scouts_for_exploration_if_needed()
 
         evaluation_values.append(get_evaluation_values(hive))
-        best_value.append(abs(benchmark_function.evaluate(hive.best_bee_pos)))
+        best_value.append(abs(hive.f.evaluate(hive.best_bee_pos)))
 
-        if dimensions == 2:
+        if hive.f.dim == 2:
             x_best_bee, y_best_bee = update_bees_positions(x_best_bee, y_best_bee, [hive.best_bee_pos], position=True)
             x_empl, y_empl = update_bees_positions(x_empl, y_empl, hive.bees_employed)
             x_onlook, y_onlook = update_bees_positions(x_onlook, y_onlook, hive.bees_onlookers)
 
-    print('\nBest bee in the whole population:', hive.best_bee_pos)
-    print('Evaluation:', abs(benchmark_function.evaluate(hive.best_bee_pos)))
+    if verbose:
+        print('\nBest bee in the whole population:', hive.best_bee_pos)
+        print('Evaluation:', abs(hive.f.evaluate(hive.best_bee_pos)))
+        best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, hive.f)
 
-    best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, benchmark_function)
-
-    if dimensions == 2:
+    if hive.f.dim == 2 and save_tests:
         save_bees_positions(x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook, hive, iterations)
+
+    return best_value
+
+
+if __name__ == '__main__':
+    fly_to_food_fun = [OnlookerBee.fly_to_food_simply, OnlookerBee.fly_to_food_uniformly_by_neighbour,
+                       OnlookerBee.fly_to_food_choosing_random_dimensions,
+                       OnlookerBee.fly_to_food_randomly_by_neighbour,
+                       OnlookerBee.fly_to_food_uniformly_by_neighbourhood]
+    dimensions = 2
+    benchmark_function = Schwefel(dimensions)
+    iterations = 200
+    employed_no, onlooker_no = 25, 50
+    limit, neighbourhood = int(np.power(iterations, 2/3)), 0.25
+    hive = Hive(employed_no, onlooker_no, benchmark_function, fly_to_food_fun[1], limit, neighbourhood)
+
+    run_abc(hive, iterations, verbose=True, save_tests=True)
+

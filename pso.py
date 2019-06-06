@@ -25,7 +25,7 @@ W = 0.729
 CP = 1.49445
 CG = 1.49445
 
-FUNCTION = benchmarks.Ackley(2)
+FUNCTION = benchmarks.Schwefel(2)
 ITERATIONS_COUNT = 200
 PARTICLES_COUNT = 40
 

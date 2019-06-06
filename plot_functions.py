@@ -169,7 +169,7 @@ def animation_schwefel(file_name, anim_f):
 
 
 def load_bees_positions(file_name):
-    with open("./tests/abc/" + file_name, "rb") as fp:
+    with open("./tests/abc/positions/" + file_name, "rb") as fp:
         x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook = pickle.load(fp)
     return x_best_bee, y_best_bee, x_empl, y_empl, x_onlook, y_onlook
 
@@ -289,12 +289,12 @@ if __name__ == '__main__':
     anim_fun = [animation_of_bees, animation_of_particles]
 
     # benchmark = Ackley(2)
-    file_name = 'Ackley_40_particles_in_100iterations.txt'
-    animation_ackley(file_name, anim_fun[1])
+    file_name = 'Ackley_20-50_bees_in_200iterations_20limit_0.3neighbourhood.txt'
+    animation_ackley(file_name, anim_fun[0])
     # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
     # file_name = 'Rastrigin_40_particles_in_200iterations.txt'
     # animation_rastrigin(file_name, anim_fun[1])
 
-    # file_name = 'Schwefel_20-50_bees_in_200iterations_20limit_50neighbourhood.txt'
+    # file_name = 'Schwefel_25-50_bees_in_200iterations_34limit_0.25neighbourhood.txt'
     # animation_schwefel(file_name, anim_fun[0])

@@ -26,8 +26,8 @@ SPC=True
 
 FUNCTION=benchmarks.Ackley(2)
 
-ITERATIONS_COUNT = 100
-CATS_COUNT = 40
+ITERATIONS_COUNT = 350
+CATS_COUNT = 20
 
 class CSO(object):
 

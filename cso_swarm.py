@@ -15,6 +15,7 @@ class CatSwarm(object):
         self.cost_fuction = cost_function
         self.cats=self.initialize_cats(cats_count,N,benchmark_min,benchmark_max,cost_function,c, smp, cdc, srd, spc)
         self.g=self.get_intitial_global_optimum()
+        self.f = function
         self.best=copy.deepcopy(self.g)
 
 

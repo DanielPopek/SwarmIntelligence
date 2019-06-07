@@ -1,6 +1,7 @@
 import cso_cat
 import numpy as np
 import random
+import  copy
 
 class CatSwarm(object):
 
@@ -14,6 +15,7 @@ class CatSwarm(object):
         self.cost_fuction = cost_function
         self.cats=self.initialize_cats(cats_count,N,benchmark_min,benchmark_max,cost_function,c, smp, cdc, srd, spc)
         self.g=self.get_intitial_global_optimum()
+        self.best=copy.deepcopy(self.g)
 
 
     def initialize_cats(self,cats_count,N,benchmark_min,benchmark_max,cost_function, c, smp, cdc, srd, spc):
@@ -60,9 +62,12 @@ class CatSwarm(object):
             cat.update_position()
             self.update_global_optimum()
         self.change_cats_modes()
+        if self.cost_fuction(self.g) < self.cost_fuction(self.best):
+            self.best = copy.deepcopy(self.g)
 
     def __str__(self):
         object=''
         for i in range(self.cats_count):
             object+=self.cats[i].__str__()+'\n'
+        object+=str(self.best)
         return object

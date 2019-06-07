@@ -8,7 +8,7 @@ CDC=2
 SRD=0.3
 SPC=True
 
-FUNCTION=benchmarks.SampleFunction(2)
+FUNCTION=benchmarks.Ackley(2)
 
 ITERATIONS_COUNT = 100
 CATS_COUNT = 40

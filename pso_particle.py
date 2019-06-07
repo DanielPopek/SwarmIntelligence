@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 
 
@@ -10,7 +12,7 @@ class Particle(object):
         self.index = index
         self.cost_fuction = cost_function
         self.x, self.v = self.initialize_positions_and_velocity(N, benchmark_min, benchmark_max)
-        self.p = self.x
+        self.p = copy.deepcopy(self.x)
 
     def initialize_positions_and_velocity(self, N, benchmark_min, benchmark_max):
         position = np.zeros(shape=(1, N))
@@ -22,7 +24,7 @@ class Particle(object):
 
     def update_local_optimum(self):
         if self.cost_fuction(self.x[0]) < self.cost_fuction(self.p[0]):
-            self.p = self.x
+            self.p = copy.deepcopy(self.x)
 
     def update_velocity(self, w, cp, cg):
         rp = np.random.uniform(0, 1, 1)[0]

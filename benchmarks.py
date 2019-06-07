@@ -39,6 +39,7 @@ class SampleFunction(ObjectiveFunction):
     def evaluate(self, x):
         return math.pow(x[0, 0], 2) + math.pow(x[0, 1], 2) + 1
 
+
 class Rastrigin(ObjectiveFunction):
 
     def __init__(self, dim):

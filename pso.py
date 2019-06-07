@@ -9,8 +9,8 @@ def update_particles_positions(swarm, x_best, y_best, x_swarm, y_swarm):
     for i, particle in enumerate(swarm.particles):
         x_swarm[i].append(particle.x[0][0])
         y_swarm[i].append(particle.x[0][1])
-    x_best[0].append(swarm.g[0])
-    y_best[0].append(swarm.g[1])
+    x_best[0].append(swarm.best[0])
+    y_best[0].append(swarm.best[1])
     return x_best, y_best, x_swarm, y_swarm
 
 
@@ -25,8 +25,8 @@ W = 0.729
 CP = 1.49445
 CG = 1.49445
 
-FUNCTION = benchmarks.Schwefel(2)
-ITERATIONS_COUNT = 200
+FUNCTION = benchmarks.Ackley(2)
+ITERATIONS_COUNT = 250
 PARTICLES_COUNT = 40
 
 
@@ -50,7 +50,8 @@ class PSO(object):
             self.inertion_update_strategy()
             if verbose:
                 print('ITERATION ' + str(i))
-                print(self.swarm)
+                # print(self.swarm)
+                print(self.swarm.cost_fuction(self.swarm.best))
             x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
         save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, ITERATIONS_COUNT)
 

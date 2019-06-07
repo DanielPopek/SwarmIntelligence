@@ -289,8 +289,8 @@ if __name__ == '__main__':
     anim_fun = [animation_of_bees, animation_of_particles]
 
     # benchmark = Ackley(2)
-    file_name = 'Ackley_20-50_bees_in_200iterations_20limit_0.3neighbourhood.txt'
-    animation_ackley(file_name, anim_fun[0])
+    file_name = 'Ackley_40_particles_in_250iterations.txt'
+    animation_ackley(file_name, anim_fun[1])
     # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
     # file_name = 'Rastrigin_40_particles_in_200iterations.txt'

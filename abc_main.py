@@ -92,7 +92,7 @@ if __name__ == '__main__':
     dimensions = 2
     benchmark_function = Schwefel(dimensions)
     iterations = 200
-    employed_no, onlooker_no = 25, 50
+    employed_no, onlooker_no = 10, 20
     limit, neighbourhood = int(np.power(iterations, 2/3)), 0.25
     hive = Hive(employed_no, onlooker_no, benchmark_function, fly_to_food_fun[1], limit, neighbourhood)
 

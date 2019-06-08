@@ -252,46 +252,6 @@ def animation_of_particles(fig, ax, file_name, save_gif=False):
 
     return anim
 
-def load_cats_positions(file_name):
-    with open("./tests/cso/" + file_name, "rb") as fp:
-        x_best, y_best, x_swarm, y_swarm = pickle.load(fp)
-    return x_best, y_best, x_swarm, y_swarm
-
-
-def animation_of_cats(fig, ax, file_name, save_gif=False):
-    x_b, y_b, x_p, y_p = load_cats_positions(file_name)
-
-    plot_colors, markers = ["orangered", "black"], ["D", "."]
-    lines = []
-    lines_data_x, lines_data_y = x_b + x_p, y_b + y_p
-
-    line = ax.plot([], [], marker=markers[0], color=plot_colors[0])[0]  # for best particle
-    lines.append(line)
-    for bee in range(len(x_p)):
-        line = ax.plot([], [], marker=markers[1], color=plot_colors[1])[0]  # for all particles
-        lines.append(line)
-
-    def init():
-        for line in lines:
-            line.set_data([], [])
-        return lines
-
-    def animate(i):
-        for l, line in enumerate(lines):
-            line.set_data(lines_data_x[l][i], lines_data_y[l][i])  # get bee, get current point
-        return lines
-
-    frames = len(lines_data_x[0])
-    interval = int(8000/frames)
-    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=frames, interval=interval,
-                                   blit=True, repeat=False)
-
-    if save_gif:
-        plt.tight_layout()
-        anim.save('./tests/cso/' + file_name[:-4] + '.gif', writer='imagemagick', fps=60)
-
-    return anim
-
 
 def best_and_avg_bees_evaluation_plot(file_name, f):
     x_b, y_b, x_e, y_e, x_o, y_o = load_bees_positions(file_name)
@@ -326,11 +286,11 @@ def best_and_avg_bees_evaluation_plot(file_name, f):
 
 
 if __name__ == '__main__':
-    anim_fun = [animation_of_bees, animation_of_particles,animation_of_cats]
+    anim_fun = [animation_of_bees, animation_of_particles]
 
     # benchmark = Ackley(2)
-    file_name = 'Ackley_20_cats_in_350iterations.txt'
-    animation_ackley(file_name, anim_fun[2])
+    file_name = 'Ackley_40_particles_in_250iterations.txt'
+    animation_ackley(file_name, anim_fun[1])
     # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
     # file_name = 'Rastrigin_40_particles_in_200iterations.txt'

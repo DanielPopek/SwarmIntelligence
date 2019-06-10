@@ -8,6 +8,9 @@ class Particle(object):
     # data - paczka informacji wstepnych : N (rozmiar przezstrzeni, minimum dziedziny benchmarku, maksiumum
     def __init__(self, data):
         index, N, benchmark_min, benchmark_max, cost_function, swarm = data
+        self.N=N
+        self.benchmark_min=benchmark_min
+        self.benchmark_max=benchmark_max
         self.swarm = swarm
         self.index = index
         self.cost_fuction = cost_function
@@ -34,6 +37,11 @@ class Particle(object):
 
     def update_position(self):
         self.x += self.v
+        for i in range(self.N):
+            if self.x[0, i]>self.benchmark_max :
+                self.x[0,i]=self.benchmark_max
+            if self.x[0, i]<self.benchmark_min:
+                self.x[0, i] = self.benchmark_min
 
     def __str__(self):
         return 'index: {0}, position: {1}, best: {2}'.format(self.index, self.x, self.p)

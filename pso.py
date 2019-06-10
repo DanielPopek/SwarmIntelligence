@@ -2,6 +2,7 @@ import pickle
 
 import pso_swarm
 import benchmarks
+import time
 import math
 
 
@@ -21,22 +22,25 @@ def save_positions_to_file(x_best, y_best, x_swarm, y_swarm, swarm, iterations):
         pickle.dump([x_best, y_best, x_swarm, y_swarm], fp)
 
 
-W = 0.729
+W = 0.229 #0.729
 CP = 1.49445
 CG = 1.49445
 
-FUNCTION = benchmarks.Ackley(2)
-ITERATIONS_COUNT = 250
-PARTICLES_COUNT = 40
+FUNCTION = benchmarks.Schwefel(2)
+ITERATIONS_COUNT = 1000
+PARTICLES_COUNT = 50
 
 
 class PSO(object):
 
     # data - paczka informacji wstepnych : N (rozmiar przestrzeni, minimum dziedziny benchmarku, maksiumum
-    def __init__(self):
-        data = PARTICLES_COUNT, FUNCTION
+    def __init__(self,particles_count,iter,function,w,cp,cg):
+        data = particles_count, function
         self.swarm = pso_swarm.Swarm(data)
-        self.w = W
+        self.iter=iter
+        self.w = w
+        self.cp=cp
+        self.cg=cg
 
     # po to by sprawdzić jak zmniejszanie W wpływa na zbieganie do optimum globalnego (redukowanie eksploracji)
     def inertion_update_strategy(self):
@@ -45,16 +49,20 @@ class PSO(object):
     def run_iterations(self, verbose=True):
         x_best, y_best, x_swarm, y_swarm = [[]], [[]], [[] for _ in range(self.swarm.particles_count)], [[] for _ in range(
             self.swarm.particles_count)]
-        for i in range(ITERATIONS_COUNT):
-            self.swarm.pso_iteration_step(self.w, CP, CG)
+        for i in range(self.iter):
+            self.swarm.pso_iteration_step(self.w, self.cp, self.cg)
             self.inertion_update_strategy()
             if verbose:
                 print('ITERATION ' + str(i))
                 # print(self.swarm)
                 print(self.swarm.cost_fuction(self.swarm.best))
-            x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
-        save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, ITERATIONS_COUNT)
+            # x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
+        # save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, ITERATIONS_COUNT)
+        return self.swarm.cost_fuction(self.swarm.best)
 
+# start=time.time()
+# pso = PSO(PARTICLES_COUNT,ITERATIONS_COUNT,FUNCTION,W,CP,CG)
+# pso.run_iterations(False)
+# end=time.time()
+# print(end-start)
 
-pso = PSO()
-pso.run_iterations()

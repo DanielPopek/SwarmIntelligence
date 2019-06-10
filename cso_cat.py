@@ -17,6 +17,8 @@ class Cat(object):
         self.c=c
         self.tracing = tracing
         self.N = N
+        self.benchmark_min=benchmark_min
+        self.benchmark_max=benchmark_max
 
     def initialize_positions_and_velocity(self, N, benchmark_min, benchmark_max):
         position = np.zeros(shape=(1, N))
@@ -70,6 +72,11 @@ class Cat(object):
 
     def update_position_velocity(self):
         self.x += self.v
+        for i in range(self.N):
+            if self.x[0, i]>self.benchmark_max :
+                self.x[0,i]=self.benchmark_max
+            if self.x[0, i]<self.benchmark_min:
+                self.x[0, i] = self.benchmark_min
 
     def __str__(self):
         return 'cat: {0}, position: {1}, tracing: {2} '.format(self.index, self.x,self.tracing)

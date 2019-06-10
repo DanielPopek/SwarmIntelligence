@@ -217,6 +217,11 @@ def load_particles_positions(file_name):
         x_best, y_best, x_swarm, y_swarm = pickle.load(fp)
     return x_best, y_best, x_swarm, y_swarm
 
+def load_cats_positions(file_name):
+    with open("./tests/cso/" + file_name, "rb") as fp:
+        x_best, y_best, x_swarm, y_swarm = pickle.load(fp)
+    return x_best, y_best, x_swarm, y_swarm
+
 
 def animation_of_particles(fig, ax, file_name, save_gif=False):
     x_b, y_b, x_p, y_p = load_particles_positions(file_name)
@@ -251,12 +256,6 @@ def animation_of_particles(fig, ax, file_name, save_gif=False):
         anim.save('./tests/pso/' + file_name[:-4] + '.gif', writer='imagemagick', fps=60)
 
     return anim
-
-def load_cats_positions(file_name):
-    with open("./tests/cso/" + file_name, "rb") as fp:
-        x_best, y_best, x_swarm, y_swarm = pickle.load(fp)
-    return x_best, y_best, x_swarm, y_swarm
-
 
 def animation_of_cats(fig, ax, file_name, save_gif=False):
     x_b, y_b, x_p, y_p = load_cats_positions(file_name)
@@ -332,10 +331,12 @@ if __name__ == '__main__':
     # file_name = 'Rastrigin_50_particles_in_300iterations.txt'
     # file_name = 'Schwefel_50_particles_in_1000iterations.txt'
     # animation_schwefel(file_name, anim_fun[1])
+    file_name = 'Ackley_50_cats_in_300iterations.txt'
+    animation_ackley(file_name, anim_fun[2])
     # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
     # file_name = 'Rastrigin_40_particles_in_200iterations.txt'
     # animation_rastrigin(file_name, anim_fun[1])
 
-    file_name = 'Schwefel_25-50_bees_in_200iterations_34limit_0.25neighbourhood.txt'
-    animation_schwefel(file_name, anim_fun[0])
+    # file_name = 'Schwefel_25-50_bees_in_200iterations_34limit_0.25neighbourhood.txt'
+    # animation_schwefel(file_name, anim_fun[0])

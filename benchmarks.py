@@ -3,13 +3,14 @@ import math
 
 # from deap.benchmarks import schwefel
 
-from abc import ABCMeta
-from abc import abstractmethod
+# from abc import ABCMeta
+# from abc import abstractmethod
 
+# from deap.benchmarks import schwefel
 from six import add_metaclass
 
 
-@add_metaclass(ABCMeta)
+# @add_metaclass(ABCMeta)
 class ObjectiveFunction(object):
 
     def __init__(self, name, dim, minf, maxf):
@@ -26,7 +27,7 @@ class ObjectiveFunction(object):
                + np.random.uniform(low=0, high=1, size=self.dim) * \
                np.repeat(self.maxf - self.minf, repeats=self.dim)
 
-    @abstractmethod
+    # @abstractmethod
     def evaluate(self, x):
         pass
 
@@ -70,8 +71,8 @@ class Ackley(ObjectiveFunction):
     def evaluate(self, x):
         first_sum = 0.0
         second_sum = 0.0
-        if(x.shape[0]==1):
-            x=x[0]
+        if x.shape[0] == 1:
+            x = x[0]
         for c in x:
             first_sum += c ** 2.0
             second_sum += np.math.cos(2.0 * np.math.pi * c)

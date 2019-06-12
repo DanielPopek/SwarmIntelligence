@@ -22,13 +22,13 @@ def save_positions_to_file(x_best, y_best, x_swarm, y_swarm, swarm, iterations):
         pickle.dump([x_best, y_best, x_swarm, y_swarm], fp)
 
 
-W = 0.229 #0.729
-CP = 1.49445
-CG = 1.49445
+W = 0.1
+CP = 1.2
+CG = 1.5
 
 FUNCTION = benchmarks.Rastrigin(2)
-ITERATIONS_COUNT = 200
-PARTICLES_COUNT = 50
+ITERATIONS_COUNT = 100
+PARTICLES_COUNT = 250
 
 
 class PSO(object):

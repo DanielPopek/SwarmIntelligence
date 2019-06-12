@@ -17,17 +17,17 @@ def save_positions_to_file(x_best, y_best, x_swarm, y_swarm, swarm, iterations):
     with open(file_name, "wb") as fp:
         pickle.dump([x_best, y_best, x_swarm, y_swarm], fp)
 
-C= 1.5
+C= 0.5
 MR=0.1
-SMP=10
+SMP=40
 CDC=2
-SRD=0.2
+SRD=0.6
 SPC=True
 
-FUNCTION=benchmarks.Rastrigin(2)
+FUNCTION=benchmarks.Ackley(2)
 
-ITERATIONS_COUNT = 200
-CATS_COUNT = 50
+ITERATIONS_COUNT = 100
+CATS_COUNT = 250
 
 class CSO(object):
 
@@ -44,7 +44,6 @@ class CSO(object):
             self.swarm.cso_iteration_step()
             if(verbose):
                 print('ITERATION ' + str(i))
-                print(self.swarm.best.shape)
                 print(self.swarm.cost_fuction(self.swarm.best))
             x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
         save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, self.iterations)

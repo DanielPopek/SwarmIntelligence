@@ -8,7 +8,7 @@ fly_to_food_functions = [OnlookerBee.fly_to_food_simply, OnlookerBee.fly_to_food
                          OnlookerBee.fly_to_food_choosing_random_dimensions,
                          OnlookerBee.fly_to_food_randomly_by_neighbour,
                          OnlookerBee.fly_to_food_uniformly_by_neighbourhood]
-fly_to_food_fun = OnlookerBee.fly_to_food_choosing_random_dimensions
+# fly_to_food_fun = OnlookerBee.fly_to_food_choosing_random_dimensions
 
 dimensions = [2, 10]  # [2, 3, 5, 10, 25, 50]
 benchmark_functions = [Ackley, Rastrigin, Schwefel]  # [Ackley, Rastrigin, Schwefel]
@@ -41,8 +41,12 @@ if __name__ == '__main__':
                             # else:
                             #     neighbourhood = neighbourhoods[0]
                             for neigh in neighbourhood:
-                        # limit = int(np.power(i, 2/3))
-                        # neigh = 0.2
+                                # limit = int(np.power(i, 2/3))
+                                # neigh = 0.2
+
+                                # for fly_to_food_fun in fly_to_food_functions:
+                                #     limit, neigh = int(np.power(i, 2 / 3)), 0.25
+                                fly_to_food_fun = fly_to_food_functions[0]
                                 for j in range(n):
                                     print(f'    hive no {j+1}...')
                                     hive = Hive(empl_no, onlook_no, f, fly_to_food_fun, limit, neigh)

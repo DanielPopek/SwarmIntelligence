@@ -17,17 +17,17 @@ def save_positions_to_file(x_best, y_best, x_swarm, y_swarm, swarm, iterations):
     with open(file_name, "wb") as fp:
         pickle.dump([x_best, y_best, x_swarm, y_swarm], fp)
 
-C= 3
+C= 1.5
 MR=0.1
 SMP=10
 CDC=2
-SRD=0.3
+SRD=0.2
 SPC=True
 
 FUNCTION=benchmarks.Rastrigin(2)
 
-ITERATIONS_COUNT = 100
-CATS_COUNT = 40
+ITERATIONS_COUNT = 200
+CATS_COUNT = 50
 
 class CSO(object):
 
@@ -44,11 +44,13 @@ class CSO(object):
             self.swarm.cso_iteration_step()
             if(verbose):
                 print('ITERATION ' + str(i))
-                print(self.swarm)
-                print(self.swarm.g)
-            # x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
-        # save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, self.iterations)
+                print(self.swarm.best.shape)
+                print(self.swarm.cost_fuction(self.swarm.best))
+            x_best, y_best, x_swarm, y_swarm = update_particles_positions(self.swarm, x_best, y_best, x_swarm, y_swarm)
+        save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, self.iterations)
         return self.swarm.cost_fuction(self.swarm.best)
 
 # cso=CSO(ITERATIONS_COUNT,CATS_COUNT,FUNCTION,MR, C, SMP, CDC, SRD, SPC)
-# cso.run_iterations(False)
+# cso.run_iterations(True)
+
+# print(FUNCTION.evaluate([[-0.01290481,-0.02309485]]))

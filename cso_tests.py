@@ -17,13 +17,13 @@ ITERATIONS_COUNT = 100
 CATS_COUNT = 40
 
 
-benchmark_functions = [Ackley(2), Rastrigin(2)]
-iterations = [200, 500, 1000]
-cats_number = [50, 100, 500]
+benchmark_functions = [Rastrigin(2)]
+iterations = [200]
+cats_number = [50]
 c_values=[0.5,1.0,1.5,2.0,3.0]
 MR_values=[0.1,0.3,0.6,0.9]
 SMP_values=[5,10,20,40]
-SRD_values=[0.1,0.3,0.5,0.8]
+SRD_values=[0.1,0.3,0.5,0.6]
 
 
 

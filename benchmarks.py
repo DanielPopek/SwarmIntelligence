@@ -47,6 +47,8 @@ class Rastrigin(ObjectiveFunction):
         super(Rastrigin, self).__init__('Rastrigin', dim, -5.12, 5.12)
 
     def evaluate(self, x):
+        if x.shape==(1,2):
+            x=x[0]
         return 10 * len(x) \
                + np.sum(np.power(x, 2) - 10 * np.cos(2 * np.pi * np.array(x)))
 
@@ -83,4 +85,8 @@ class Ackley(ObjectiveFunction):
 #
 # sample=SampleFunction(2)
 #
+# print(sample.evaluate(position))
+
+# position=[-0.01290481, -0.02309485]
+# sample=Rastrigin(2)
 # print(sample.evaluate(position))

@@ -331,8 +331,8 @@ if __name__ == '__main__':
     # file_name = 'Rastrigin_50_particles_in_300iterations.txt'
     # file_name = 'Schwefel_50_particles_in_1000iterations.txt'
     # animation_schwefel(file_name, anim_fun[1])
-    file_name = 'Ackley_50_cats_in_300iterations.txt'
-    animation_ackley(file_name, anim_fun[2])
+    file_name = 'Rastrigin_50_cats_in_200iterations.txt'
+    animation_rastrigin(file_name, anim_fun[2])
     # best_and_avg_bees_evaluation_plot(file_name, benchmark)
 
     # file_name = 'Rastrigin_40_particles_in_200iterations.txt'

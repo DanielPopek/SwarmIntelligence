@@ -26,8 +26,8 @@ W = 0.229 #0.729
 CP = 1.49445
 CG = 1.49445
 
-FUNCTION = benchmarks.Schwefel(2)
-ITERATIONS_COUNT = 1000
+FUNCTION = benchmarks.Rastrigin(2)
+ITERATIONS_COUNT = 200
 PARTICLES_COUNT = 50
 
 
@@ -60,9 +60,9 @@ class PSO(object):
         # save_positions_to_file(x_best, y_best, x_swarm, y_swarm, self.swarm, ITERATIONS_COUNT)
         return self.swarm.cost_fuction(self.swarm.best)
 
-# start=time.time()
-# pso = PSO(PARTICLES_COUNT,ITERATIONS_COUNT,FUNCTION,W,CP,CG)
-# pso.run_iterations(False)
-# end=time.time()
-# print(end-start)
+start=time.time()
+pso = PSO(PARTICLES_COUNT,ITERATIONS_COUNT,FUNCTION,W,CP,CG)
+pso.run_iterations(True)
+end=time.time()
+print(end-start)
 

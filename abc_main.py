@@ -51,6 +51,28 @@ def best_and_avg_evaluation_plot(best_value, evaluation_values, iterations, f):
     plt.show()
 
 
+def best_and_avg_evaluation_plot_dynamic(best_value, evaluation_values, iterations, f):
+    best_bee = [min(values) for values in evaluation_values]
+    avg_bee = [sum(values)/len(values) for values in evaluation_values]
+    x = list(range(iterations))
+
+    plt.plot(x, [0 for _ in x], color="grey", ls='--')
+    plt.plot(x, best_bee, color='lightseagreen', label='best bee')
+    plt.plot(x, best_value, color='forestgreen', label='best found')
+    plt.plot(x, avg_bee, color='coral', label='average bee')
+    plt.xlim(0, iterations-1)
+    plt.legend()
+    plt.ylabel('function value')
+    plt.xlabel('iteration')
+
+    best = best_value[-1]
+    best_str = ('%0.8f' if best < 0.0001 else ('%0.5f' if best < 1 else ('%0.3f' if best < 10 else '%0.2f'))) % best
+    plt.title(f'{f.name} function for ABC having {len(evaluation_values[0])} bees in {f.dim} dimensions\n'
+              f'with final best value = {best_str}')
+
+    plt.show()
+
+
 def run_abc(hive, iterations, save_tests=False, verbose=False):
     x_best_bee, y_best_bee = [[]], [[]]
     x_empl, y_empl = [[] for _ in range(hive.n_empl)], [[] for _ in range(hive.n_empl)]

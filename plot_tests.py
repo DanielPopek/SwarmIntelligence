@@ -156,11 +156,16 @@ def plot_linear_by_params(algorithm, f, file_end, params={'neighbourhood': 0.1},
 
 
 if __name__ == '__main__':
-    algorithm = 'abc'
     f = Rastrigin(2)
 
-    plot_linear_by_iters_and_dim(algorithm, f)
-    plot_linear_by_iters(algorithm, f, params={'employed': 50, 'onlookers': 200})
+    ''' PSO '''
+    algorithm = 'pso'
+    plot_linear_by_iters(algorithm, f, params={'w': 0.5, 'cp': 0.2, 'cg': 0.2})
+
+    ''' ABC '''
+    algorithm = 'abc'
+    # plot_linear_by_iters_and_dim(algorithm, f)
+    # plot_linear_by_iters(algorithm, f, params={'employed': 50, 'onlookers': 200})
     # plot_linear_by_iters_and_bee(algorithm, f, plot_by='employed', other_bees=10, ylim=0)
     # plot_linear_by_params(algorithm, f, 'lim_neigh', params={'neighbourhood': 0.1}, ylim=0)
     # plot_linear_by_params(algorithm, f, 'fun', params={}, ylim=0, leg=True)

@@ -1,0 +1,16 @@
+,i,f,dim,employed,onlookers,fly_to_food_fun,limit,neighbourhood,iter,best
+0,0,Ackley,10,50,200,fly_to_food_simply,62,0.25,500,2.4785272589383074
+1,1,Ackley,10,50,200,fly_to_food_simply,62,0.25,500,2.7519183332628114
+2,2,Ackley,10,50,200,fly_to_food_simply,62,0.25,500,3.900881518327822
+3,0,Ackley,10,50,200,fly_to_food_uniformly_by_neighbour,62,0.25,500,8.281257173781142e-06
+4,1,Ackley,10,50,200,fly_to_food_uniformly_by_neighbour,62,0.25,500,3.705657474206703e-07
+5,2,Ackley,10,50,200,fly_to_food_uniformly_by_neighbour,62,0.25,500,7.085683229934858e-06
+6,0,Ackley,10,50,200,fly_to_food_choosing_random_dimensions,62,0.25,500,2.8120911648166214e-06
+7,1,Ackley,10,50,200,fly_to_food_choosing_random_dimensions,62,0.25,500,9.639069539435496e-06
+8,2,Ackley,10,50,200,fly_to_food_choosing_random_dimensions,62,0.25,500,3.853779542284386e-05
+9,0,Ackley,10,50,200,fly_to_food_randomly_by_neighbour,62,0.25,500,0.0005966150476450771
+10,1,Ackley,10,50,200,fly_to_food_randomly_by_neighbour,62,0.25,500,0.0016100779773933205
+11,2,Ackley,10,50,200,fly_to_food_randomly_by_neighbour,62,0.25,500,2.8687969088725396e-05
+12,0,Ackley,10,50,200,fly_to_food_uniformly_by_neighbourhood,62,0.25,500,14.853613175284833
+13,1,Ackley,10,50,200,fly_to_food_uniformly_by_neighbourhood,62,0.25,500,14.511396554333292
+14,2,Ackley,10,50,200,fly_to_food_uniformly_by_neighbourhood,62,0.25,500,16.573134163659727

@@ -1,0 +1,16 @@
+,i,f,dim,employed,onlookers,fly_to_food_fun,limit,neighbourhood,iter,best
+0,0,Schwefel,2,50,200,fly_to_food_simply,34,0.25,200,121.79052315632407
+1,1,Schwefel,2,50,200,fly_to_food_simply,34,0.25,200,77.93565010743328
+2,2,Schwefel,2,50,200,fly_to_food_simply,34,0.25,200,120.8161625360658
+3,0,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbour,34,0.25,200,5.976664851914393e-08
+4,1,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbour,34,0.25,200,0.13892229836665138
+5,2,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbour,34,0.25,200,4.640696715796366e-09
+6,0,Schwefel,2,50,200,fly_to_food_choosing_random_dimensions,34,0.25,200,0.02407415712218608
+7,1,Schwefel,2,50,200,fly_to_food_choosing_random_dimensions,34,0.25,200,0.0969367329155375
+8,2,Schwefel,2,50,200,fly_to_food_choosing_random_dimensions,34,0.25,200,10.569688012426013
+9,0,Schwefel,2,50,200,fly_to_food_randomly_by_neighbour,34,0.25,200,0.00010467513834555575
+10,1,Schwefel,2,50,200,fly_to_food_randomly_by_neighbour,34,0.25,200,0.23817028807457064
+11,2,Schwefel,2,50,200,fly_to_food_randomly_by_neighbour,34,0.25,200,0.019156407439254508
+12,0,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbourhood,34,0.25,200,40.50335997194611
+13,1,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbourhood,34,0.25,200,1.2514353556980495e-05
+14,2,Schwefel,2,50,200,fly_to_food_uniformly_by_neighbourhood,34,0.25,200,145.15428355255233
